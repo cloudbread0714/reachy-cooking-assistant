@@ -20,17 +20,57 @@ uv run pytest                         # 테스트
 
 시뮬레이터 연결, Windows/Mac 차이, 문제 해결은 [docs/setup.md](docs/setup.md)를 보세요.
 
-## 누가 어디서 개발하나요
+## 누가 어디서 개발하나
 
-| 이름 | 담당 | 내 폴더 / 파일 | 시작 문서 |
-|---|---|---|---|
-| **강준형** | 음성 대화 + 요리 안내 | `voice/`, `core/llm.py`, `core/prompt.py`, `tools/cooking.py` | [dev-guide.md#강준형](docs/dev-guide.md#강준형) |
-| **김민석** | 감정 표현 + 재료 관리 + 음식 추천 | `motion/`, `tools/ingredients.py`, `tools/recipes.py`, `rag/` | [dev-guide.md#김민석](docs/dev-guide.md#김민석) |
-| **강유진** | 시각 인식 + 비전 재료 등록 + 통합 | `vision/`, `robot/`, `core/schema.py`, `tools/dispatcher.py`, `main.py` | [dev-guide.md#강유진](docs/dev-guide.md#강유진) |
-| 다 같이 | 레시피 데이터 | `data/recipes/` | [data-contract.md](docs/data-contract.md#레시피-형식) |
+- 수정: 이미 있는 파일. `TODO(이름)` 부분을 채우면 됨
+- 새로 만들기: 아직 없는 파일. 이 이름으로 만들어서 구현
+- 함수 이름·입출력은 그대로 유지 (바꾸려면 단톡방 공유)
+- 내 파일 밖은 수정 금지. 필요하면 담당자에게 요청
+- 자세한 설명: [docs/dev-guide.md](docs/dev-guide.md)
 
-**규칙: 내 폴더 밖의 파일은 고치지 않아요.** 필요하면 담당자에게 말하거나 PR에서 리뷰를 요청해요.
-각 파일의 `TODO(이름)` 이 내가 채울 부분이에요.
+### 강준형: 음성 대화 + 요리 안내
+
+| 구분 | 파일 | 할 일 |
+|---|---|---|
+| 수정 | `voice/stt.py` | `listen()`: 마이크 녹음 → Groq Whisper → 텍스트 |
+| 수정 | `voice/tts.py` | `speak()`: edge-tts 로 말하기 |
+| 수정 | `core/llm.py` | `ask()`: Gemini 호출 (사진 포함, JSON 응답) |
+| 수정 | `core/prompt.py` | 프롬프트 다듬기 |
+| 수정 | `tools/cooking.py` | `start_cooking`, `next_step`, `prev_step`, `repeat_step`, `stop_cooking` |
+| 새로 만들기 | `voice/recorder.py` | 마이크 녹음, 말 끝나면(무음) 자동 종료 |
+| 새로 만들기 | `tests/test_cooking.py` | 시작 → 다음 → 이전 → 종료 순서 테스트 |
+| 새로 만들기 | `tests/test_llm.py` | 이상한 LLM 응답 샘플로 파싱 테스트 |
+
+### 김민석: 감정 표현 + 재료 관리 + 음식 추천
+
+| 구분 | 파일 | 할 일 |
+|---|---|---|
+| 수정 | `motion/emotions.py` | 감정 8개 동작 다듬기 (`MOVES`), 필요하면 감정 추가 |
+| 수정 | `tools/ingredients.py` | `add_ingredient`, `remove_ingredient`, `list_ingredients`, `check_expiry` |
+| 수정 | `tools/recipes.py` | `recommend_recipe`: 추천 문장 만들기 |
+| 수정 | `rag/search.py` | `search_recipes()`: 가진 재료로 레시피 검색 |
+| 새로 만들기 | `rag/embed.py` | (선택) "매운 거" 같은 요청용 임베딩 검색 |
+| 새로 만들기 | `tests/test_ingredients.py` | 등록·중복 등록·삭제·임박 테스트 |
+| 새로 만들기 | `tests/test_search.py` | 재료별 추천 순위 테스트 |
+
+모션 확인: 시뮬레이터 켜고 `uv run python -m motion.demo`
+
+### 강유진: 시각 인식 + 비전 재료 등록 + 통합
+
+| 구분 | 파일 | 할 일 |
+|---|---|---|
+| 수정 | `vision/camera.py` | `capture_best_frame()`: 가장 선명한 사진, `needs_vision()` 키워드 |
+| 수정 | `core/prompt.py` | 사진 규칙 (애매하면 다시 묻기, 재료명 통일). 준형님과 협의 |
+| 수정 | `main.py` | 전체 흐름, 시연 시나리오 |
+| 수정 | `core/schema.py`, `tools/dispatcher.py` | 데이터 약속 관리 |
+| 새로 만들기 | `vision/eval.py` | 재료 사진 세트로 인식 정확도 측정 |
+| 새로 만들기 | `tests/test_vision.py` | `needs_vision()` 키워드 테스트 |
+
+### 다 같이
+
+| 구분 | 파일 | 할 일 |
+|---|---|---|
+| 새로 만들기 | `data/recipes/<영문-이름>.json` | 레시피 각자 10~15개 (형식: `data/recipes/kimchi-jjigae.json` 참고) |
 
 ## 폴더 구조
 

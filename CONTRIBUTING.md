@@ -128,7 +128,7 @@ chore: edge-tts 의존성 추가
 
 ## 원칙
 
-- **내 폴더만 고쳐요.** 담당은 [README](README.md#누가-어디서-개발하나요) 참고
+- **내 폴더만 고쳐요.** 담당은 [README](README.md#누가-어디서-개발하나) 참고
 - PR 은 작게: 기능 하나 = PR 하나
 - `core/schema.py` 를 바꾸는 PR 은 단톡방에 공유하고 merge
 - API 키, `.env`, `data/ingredients.json` 은 커밋하지 않아요
