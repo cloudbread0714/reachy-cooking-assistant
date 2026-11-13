@@ -31,7 +31,7 @@ listen() → needs_vision()? → capture_best_frame() → llm.ask() → dispatch
 
 **주의**
 - `next/prev/repeat_step` 은 LLM 을 다시 부르지 않아요. `state.current_step` 만 움직여요.
-- `start_cooking` 은 `rag.search.find_recipe(name)` 이 있으면 그 steps 를, 없으면 `params["steps"]` 를 써요.
+- `start_cooking` 은 레시피 혼합 방식: `data/recipes` 에 있으면 그 steps, 없으면 LLM 이 만든 `params["steps"]`. 이름으로 레시피 찾는 함수는 민석님 `rag/` 에서 받기
 - 요리 단계 문장은 `ToolResult(say=...)` 로 돌려주세요. LLM reply 대신 그 문장을 말해요.
 
 ---
@@ -42,17 +42,17 @@ listen() → needs_vision()? → capture_best_frame() → llm.ask() → dispatch
 
 | 파일 | 할 일 | 약속 (바꾸지 않기) |
 |---|---|---|
-| `motion/emotions.py` | 8개 감정 동작 다듬기 (`MOVES` 키프레임) | `EmotionPlayer(mini).play(emotion)` 바로 리턴(말하면서 움직임) |
+| `motion/emotions.py` | 8개 감정 동작 구현 | `EmotionPlayer(mini).play(emotion)` 바로 리턴(말하면서 움직임) |
 | `tools/ingredients.py` | add/remove/list/check_expiry | 각 함수 `(params: dict) -> ToolResult` |
 | `tools/recipes.py` | 추천 문장 만들기 | `recommend_recipe(params) -> ToolResult` |
-| `rag/search.py` | 레시피 검색 | `search_recipes(ingredient_names, query, k) -> list[dict]` |
+| `rag/search.py` | 레시피 검색, 이름으로 찾기 | 함수 이름·입출력은 직접 설계 (준형님과 공유) |
 
 **혼자 테스트하기**
-- 모션: 시뮬레이터를 켜고([setup.md](setup.md)) `uv run python -m motion.demo` (특정 감정만: `uv run python -m motion.demo nod shake`)
+- 모션: 시뮬레이터를 켜고([setup.md](setup.md)) 감정을 하나씩 재생하는 `motion/demo.py` 를 만들어서 확인
 - 재료/추천: `data/ingredients.example.json` 을 `data/ingredients.json` 으로 복사해서 `tests/test_ingredients.py` 작성
 
 **주의**
-- 감정을 추가하려면 `core/schema.py` 의 `EMOTIONS` 와 `MOVES` 둘 다 추가 (schema 변경은 단톡방 공유)
+- 감정을 추가하려면 `core/schema.py` 의 `EMOTIONS` 와 `motion/emotions.py` 둘 다 추가 (schema 변경은 단톡방 공유)
 - 같은 이름으로 `add_ingredient` 가 오면 expiry 만 업데이트, expiry 가 None 이면 "유통기한은 언제까지야?"
 - 임박 기준은 `schema.EXPIRY_SOON_DAYS` (지금 3일, 2차 회의에서 결정 예정)
 - 켜자마자 자동 알림은 보류 (2차 회의에서 결정)

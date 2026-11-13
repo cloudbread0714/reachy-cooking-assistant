@@ -44,6 +44,6 @@
 | `motion.emotions.EmotionPlayer(mini).play(emotion)` | `str` | `None` (non-blocking) | 김민석 |
 | `tools.dispatcher.dispatch(action)` | `Action \| None` | `ToolResult` | 강유진 |
 | `tools.*.<action 이름>(params)` | `dict` | `ToolResult` | action 담당자 |
-| `rag.search.search_recipes(names, query, k)` | `list[str], str \| None, int` | `list[dict]` | 김민석 |
+| `rag/search.py` 레시피 검색 | 담당자가 설계 | | 김민석 |
 
 `Response`, `Action`, `ToolResult` 는 `core/schema.py` 에 정의돼 있어요.

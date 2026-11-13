@@ -45,6 +45,7 @@
 | 강준형 | `repeat_step` | | "다시 말해줘" |
 | 강준형 | `stop_cooking` | | "그만할래" |
 
+- 레시피는 혼합 방식: `start_cooking` 은 `data/recipes/` 에 있는 요리면 그 steps, 없으면 LLM 이 만든 `params.steps` 사용
 - 말로 등록하든 카메라로 등록하든 `add_ingredient` 하나만 써요.
 - 같은 이름으로 다시 오면 expiry 만 업데이트해요.
 - 보류 (2차 회의): 켜자마자 자동 유통기한 알림, `set_alert_days`, 임박 기준 일수

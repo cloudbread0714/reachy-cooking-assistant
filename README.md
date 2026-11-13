@@ -45,15 +45,15 @@ uv run pytest                         # 테스트
 
 | 구분 | 파일 | 할 일 |
 |---|---|---|
-| 수정 | `motion/emotions.py` | 감정 8개 동작 다듬기 (`MOVES`), 필요하면 감정 추가 |
+| 수정 | `motion/emotions.py` | `EmotionPlayer.play()`: 감정 8개 동작 구현, 필요하면 감정 추가 |
 | 수정 | `tools/ingredients.py` | `add_ingredient`, `remove_ingredient`, `list_ingredients`, `check_expiry` |
 | 수정 | `tools/recipes.py` | `recommend_recipe`: 추천 문장 만들기 |
-| 수정 | `rag/search.py` | `search_recipes()`: 가진 재료로 레시피 검색 |
+| 수정 | `rag/search.py` | 가진 재료로 레시피 검색, 이름으로 레시피 찾기 (함수는 직접 설계) |
 | 새로 만들기 | `rag/embed.py` | (선택) "매운 거" 같은 요청용 임베딩 검색 |
 | 새로 만들기 | `tests/test_ingredients.py` | 등록·중복 등록·삭제·임박 테스트 |
 | 새로 만들기 | `tests/test_search.py` | 재료별 추천 순위 테스트 |
+| 새로 만들기 | `motion/demo.py` | (선택) 감정 하나씩 재생해서 시뮬레이터로 확인하는 스크립트 |
 
-모션 확인: 시뮬레이터 켜고 `uv run python -m motion.demo`
 
 ### 강유진: 시각 인식 + 비전 재료 등록 + 통합
 

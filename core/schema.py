@@ -7,7 +7,7 @@ import re
 from dataclasses import dataclass, field
 from typing import Any
 
-# 감정 추가 시 motion/emotions.py 의 MOVES 도 같이 추가
+# 감정 추가 시 motion/emotions.py 에도 동작 추가
 EMOTIONS: tuple[str, ...] = (
     "happy",     # 기쁨, 칭찬, 인사
     "sad",       # 위로, 아쉬움

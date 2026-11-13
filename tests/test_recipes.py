@@ -4,9 +4,9 @@ import json
 
 import pytest
 
-from rag.search import RECIPE_DIR, load_recipes
+from core.config import DATA_DIR
 
-FILES = sorted(RECIPE_DIR.glob("*.json"))
+FILES = sorted((DATA_DIR / "recipes").glob("*.json"))
 REQUIRED = {"name": str, "ingredients": list, "optional": list, "tags": list, "time_min": int, "steps": list}
 
 
@@ -21,5 +21,5 @@ def test_recipe_format(path):
 
 
 def test_recipe_names_unique():
-    names = [r["name"] for r in load_recipes()]
+    names = [json.loads(p.read_text(encoding="utf-8"))["name"] for p in FILES]
     assert len(names) == len(set(names))
