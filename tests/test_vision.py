@@ -148,3 +148,12 @@ def test_recipes_use_standard_names():
     known_names.cache_clear()
     wrong = sorted(set(ALIASES) & known_names())
     assert not wrong, f"레시피에 별칭 대신 표준 이름 써줘: {[(w, ALIASES[w]) for w in wrong]}"
+
+
+def test_eval_judge():
+    from vision.eval import judge
+
+    assert judge("계란", Response(reply="달걀이야!")) == "correct"  # 별칭도 정답
+    assert judge("대파", Response(reply="이건 양파야!")) == "wrong"
+    assert judge("대파", Response(reply="잘 안 보여", emotion="confused")) == "unsure"
+    assert judge("대파", Response(reply="등록할게", action=Action("add_ingredient", {"name": "대파 한 단"}))) == "correct"

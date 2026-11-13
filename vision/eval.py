@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import argparse
 import time
+import unicodedata
 from datetime import date
 
 import cv2
@@ -20,7 +21,7 @@ import numpy as np
 from core import llm
 from core.config import DATA_DIR
 from vision.camera import encode_jpeg, preprocess
-from vision.names import normalize_ingredient
+from vision.names import ALIASES, normalize_ingredient
 
 SAMPLE_DIR = DATA_DIR / "vision_samples"
 QUESTION = "이거 뭐야?"
@@ -36,7 +37,8 @@ def judge(label: str, response) -> str:
     if response.action and response.action.name == "add_ingredient":
         if normalize_ingredient(str(response.action.params.get("name", ""))) == label:
             return "correct"
-    if label in response.reply:
+    names = {label, *(a for a, std in ALIASES.items() if std == label and len(a) >= 2)}  # "달걀" 도 계란 정답 ("파" 는 "양파" 에 걸려서 제외)
+    if any(name in response.reply for name in names):
         return "correct"
     return "unsure" if response.emotion == "confused" else "wrong"
 
@@ -51,26 +53,31 @@ def main() -> None:
         raise SystemExit(f"{SAMPLE_DIR} 가 없어. data/vision_samples/<재료명>/*.jpg 로 사진 넣어줘")
 
     context = {"today": date.today().isoformat(), "ingredients": [], "cooking": None}
-    counts = {"correct": 0, "unsure": 0, "wrong": 0}
+    counts = {"correct": 0, "unsure": 0, "wrong": 0, "error": 0}
     for label_dir in sorted(p for p in SAMPLE_DIR.iterdir() if p.is_dir()):
-        label = label_dir.name
+        label = unicodedata.normalize("NFC", label_dir.name)  # macOS 한글 폴더명은 자모 분리(NFD)라 비교 실패함
         images = sorted(p for p in label_dir.iterdir() if p.suffix.lower() in {".jpg", ".jpeg", ".png"})
         for path in images[: args.limit or None]:
             image = load_image(path)
             if image is None:
                 print(f"건너뜀 (못 읽음): {path}")
                 continue
-            response = llm.ask(QUESTION, context, image)
+            try:
+                response = llm.ask(QUESTION, context, image)
+            except Exception as error:  # 한 장 실패로 전체 측정 안 멈추게 (503 등)
+                counts["error"] += 1
+                print(f"[error  ] {label:8} {path.name:20} → {error!r:.80}")
+                continue
             result = judge(label, response)
             counts[result] += 1
             print(f"[{result:7}] {label:8} {path.name:20} → {response.reply}")
             time.sleep(args.delay)
 
-    total = sum(counts.values())
+    total = counts["correct"] + counts["unsure"] + counts["wrong"]  # 오류는 빼고 계산
     if total == 0:
-        raise SystemExit("사진이 없어")
+        raise SystemExit("측정된 사진이 없어")
     print(f"\n정답 {counts['correct']}/{total} ({counts['correct'] / total:.0%})"
-          f" | 다시 묻기 {counts['unsure']} | 오답 {counts['wrong']}")
+          f" | 다시 묻기 {counts['unsure']} | 오답 {counts['wrong']} | 오류(제외) {counts['error']}")
 
 
 if __name__ == "__main__":
