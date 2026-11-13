@@ -9,7 +9,7 @@ jobs:
   check:
     runs-on: ubuntu-latest
     steps:
-      - name: PR 제목이 "종류(폴더): 내용" 형식인지 확인
+      - name: PR 제목 형식 확인
         env:
           TITLE: ${{ github.event.pull_request.title }}
         run: |

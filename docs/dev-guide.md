@@ -14,7 +14,7 @@ listen() → needs_vision()? → capture_best_frame() → llm.ask() → dispatch
 
 ## 강준형
 
-🎤 **음성 대화** + 🍳 **요리 안내**
+**음성 대화** + **요리 안내**
 
 | 파일 | 할 일 | 약속 (바꾸지 않기) |
 |---|---|---|
@@ -38,7 +38,7 @@ listen() → needs_vision()? → capture_best_frame() → llm.ask() → dispatch
 
 ## 김민석
 
-🤖 **감정 표현** + 🥬 **재료 관리** + 🍽️ **음식 추천**
+**감정 표현** + **재료 관리** + **음식 추천**
 
 | 파일 | 할 일 | 약속 (바꾸지 않기) |
 |---|---|---|
@@ -61,13 +61,13 @@ listen() → needs_vision()? → capture_best_frame() → llm.ask() → dispatch
 - 감정을 추가하려면 `core/schema.py` 의 `EMOTIONS` 와 `MOVES` 둘 다 추가 (schema 변경은 단톡방 공유)
 - 같은 이름으로 `add_ingredient` 가 오면 expiry 만 업데이트, expiry 가 None 이면 "유통기한은 언제까지야?"
 - 임박 기준은 `schema.EXPIRY_SOON_DAYS` (지금 3일, 2차 회의에서 결정 예정)
-- 켜자마자 자동 알림은 ⏸ 보류 (2차 회의에서 결정)
+- 켜자마자 자동 알림은 보류 (2차 회의에서 결정)
 
 ---
 
 ## 강유진
 
-👁️ **시각 인식** + 📷 **비전 재료 등록** + 🔗 **통합**
+**시각 인식** + **비전 재료 등록** + **통합**
 
 | 파일 | 할 일 | 약속 (바꾸지 않기) |
 |---|---|---|

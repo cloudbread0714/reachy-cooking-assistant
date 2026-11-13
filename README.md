@@ -1,4 +1,4 @@
-# Reachy Cooking Assistant 🍳🤖
+# Reachy Cooking Assistant
 
 Reachy Mini(시뮬레이터)로 만드는 **요리 도우미 로봇**이에요.
 
@@ -24,9 +24,9 @@ uv run pytest                         # 테스트
 
 | 이름 | 담당 | 내 폴더 / 파일 | 시작 문서 |
 |---|---|---|---|
-| **강준형** | 🎤 음성 대화 + 🍳 요리 안내 | `voice/`, `core/llm.py`, `core/prompt.py`, `tools/cooking.py` | [dev-guide.md#강준형](docs/dev-guide.md#강준형) |
-| **김민석** | 🤖 감정 표현 + 🥬 재료 관리 + 🍽️ 음식 추천 | `motion/`, `tools/ingredients.py`, `tools/recipes.py`, `rag/` | [dev-guide.md#김민석](docs/dev-guide.md#김민석) |
-| **강유진** | 👁️ 시각 인식 + 📷 비전 재료 등록 + 통합 | `vision/`, `robot/`, `core/schema.py`, `tools/dispatcher.py`, `main.py` | [dev-guide.md#강유진](docs/dev-guide.md#강유진) |
+| **강준형** | 음성 대화 + 요리 안내 | `voice/`, `core/llm.py`, `core/prompt.py`, `tools/cooking.py` | [dev-guide.md#강준형](docs/dev-guide.md#강준형) |
+| **김민석** | 감정 표현 + 재료 관리 + 음식 추천 | `motion/`, `tools/ingredients.py`, `tools/recipes.py`, `rag/` | [dev-guide.md#김민석](docs/dev-guide.md#김민석) |
+| **강유진** | 시각 인식 + 비전 재료 등록 + 통합 | `vision/`, `robot/`, `core/schema.py`, `tools/dispatcher.py`, `main.py` | [dev-guide.md#강유진](docs/dev-guide.md#강유진) |
 | 다 같이 | 레시피 데이터 | `data/recipes/` | [data-contract.md](docs/data-contract.md#레시피-형식) |
 
 **규칙: 내 폴더 밖의 파일은 고치지 않아요.** 필요하면 담당자에게 말하거나 PR에서 리뷰를 요청해요.
@@ -37,7 +37,7 @@ uv run pytest                         # 테스트
 ```
 main.py              대화 루프 (듣기 → 사진 → LLM → action → 동작+말하기)
 core/
-  schema.py          ★ 데이터 약속: 감정 8개, action 10개, 응답 검사/예외 처리
+  schema.py          데이터 약속: 감정 8개, action 10개, 응답 검사/예외 처리
   llm.py             Gemini 호출 (지금은 mock)
   prompt.py          시스템 프롬프트
   config.py          .env 읽기
