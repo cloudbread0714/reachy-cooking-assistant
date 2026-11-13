@@ -103,4 +103,18 @@ def _parse_action(raw: Any) -> Action | None:
         return None
     if any(params.get(key) in (None, "") for key in ACTIONS[name]):
         return None
+    if name == "start_cooking":
+        params = {**params, "steps": _clean_steps(params.get("steps"))}
     return Action(name=name, params=params)
+
+
+MAX_STEPS = 20
+
+
+def _clean_steps(steps: Any) -> list[str] | None:
+    """LLM 이 만든 요리 단계 검사. 이상하면 None (→ 데이터에서 찾거나 다시 묻기)."""
+    if not isinstance(steps, list) or not 1 <= len(steps) <= MAX_STEPS:
+        return None
+    if not all(isinstance(s, str) and s.strip() for s in steps):
+        return None
+    return [s.strip() for s in steps]

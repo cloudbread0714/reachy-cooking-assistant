@@ -45,7 +45,12 @@
 | 강준형 | `repeat_step` | | "다시 말해줘" |
 | 강준형 | `stop_cooking` | | "그만할래" |
 
-- 레시피는 혼합 방식: `start_cooking` 은 `data/recipes/` 에 있는 요리면 그 steps, 없으면 LLM 이 만든 `params.steps` 사용
+- 레시피는 혼합 방식 (`start_cooking`)
+  1. `data/recipes/` 에 있으면 그 steps
+  2. 없으면 `data/generated_recipes/` (전에 LLM 이 만든 것, 각자 로컬)
+  3. 그래도 없으면 LLM 이 만든 `params.steps` 사용 + `data/generated_recipes/` 에 저장 → 다음에도 같은 순서
+  - LLM 은 단계 전체를 **한 번에** 보내고, 요리 중엔 저장된 리스트만 씀 (next/prev/repeat 에 LLM 안 부름)
+  - `steps` 가 리스트가 아니거나, 비었거나, 20단계 넘으면 schema 가 `None` 으로 바꿈 → "그 요리 방법을 못 찾았어"
 - 말로 등록하든 카메라로 등록하든 `add_ingredient` 하나만 써요.
 - 같은 이름으로 다시 오면 expiry 만 업데이트해요.
 - 보류 (2차 회의): 켜자마자 자동 유통기한 알림, `set_alert_days`, 임박 기준 일수

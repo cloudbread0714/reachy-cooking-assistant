@@ -52,3 +52,18 @@ def test_expiry_null_is_allowed():
     r = parse_response(dump({"reply": "응", "emotion": "nod",
                              "action": {"name": "add_ingredient", "params": {"name": "두부", "expiry": None}}}))
     assert r.action is not None and r.action.params["expiry"] is None
+
+
+def start(steps):
+    return parse_response(dump({"reply": "시작!", "emotion": "excited",
+                                "action": {"name": "start_cooking", "params": {"recipe": "감바스", "steps": steps}}}))
+
+
+def test_llm_steps_are_kept():
+    assert start([" 새우 손질해줘. ", "마늘 썰어줘."]).action.params["steps"] == ["새우 손질해줘.", "마늘 썰어줘."]
+
+
+def test_bad_llm_steps_become_none():
+    for bad in ("새우 볶기", [], [""], [1, 2], ["a"] * 21, None):
+        r = start(bad)
+        assert r.action.name == "start_cooking" and r.action.params["steps"] is None
