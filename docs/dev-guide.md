@@ -48,13 +48,7 @@ listen() → needs_vision()? → capture_best_frame() → llm.ask() → dispatch
 | `rag/search.py` | 레시피 검색 | `search_recipes(ingredient_names, query, k) -> list[dict]` |
 
 **혼자 테스트하기**
-- 모션: 시뮬레이터를 켜고([setup.md](setup.md)) 아래를 실행해서 8개 동작을 하나씩 보기
-  ```bash
-  uv run python -c "from robot.connection import connect; from motion.emotions import EmotionPlayer, MOVES
-  with connect() as m:
-      p = EmotionPlayer(m)
-      [ (p.play(e), p.wait(), print(e)) for e in MOVES ]"
-  ```
+- 모션: 시뮬레이터를 켜고([setup.md](setup.md)) `uv run python -m motion.demo` (특정 감정만: `uv run python -m motion.demo nod shake`)
 - 재료/추천: `data/ingredients.example.json` 을 `data/ingredients.json` 으로 복사해서 `tests/test_ingredients.py` 작성
 
 **주의**

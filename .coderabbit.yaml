@@ -1,9 +1,14 @@
 language: "ko-KR"
-tone_instructions: "대학생 팀 프로젝트예요. 짧고 쉬운 한국어로 쓰고, 코멘트 앞에 [필수] [제안] [질문] 중 하나를 붙여주세요. [필수]는 버그, 데이터 약속 위반, 키 노출에만 써주세요."
+tone_instructions: "반말로 짧게 써. 코멘트 하나에 1~2문장. 앞에 [필수] [제안] [질문] 중 하나를 붙여. [필수]는 버그, 데이터 약속 위반, 키 노출에만 써."
 
 reviews:
   profile: "chill"
   high_level_summary: true
+  collapse_walkthrough: true
+  changed_files_summary: false
+  sequence_diagrams: false
+  poem: false
+  review_status: false
   auto_review:
     enabled: true
     base_branches:
