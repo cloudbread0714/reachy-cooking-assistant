@@ -1,4 +1,4 @@
-"""감정 8개를 차례로 재생해서 시뮬레이터에서 눈으로 확인하는 스크립트. (담당: 김민석)
+"""감정 차례로 재생해서 시뮬레이터로 확인. (담당: 김민석)
 
     uv run python -m motion.demo            # 전부
     uv run python -m motion.demo nod shake  # 골라서

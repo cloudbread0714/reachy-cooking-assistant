@@ -1,7 +1,4 @@
-"""action 이름 -> 실행 함수 연결. (관리: 강유진)
-
-새 action 을 추가하면: schema.ACTIONS + 여기 HANDLERS 두 곳에 추가해요.
-"""
+"""action 이름 → 함수. 새 action 은 schema.ACTIONS + HANDLERS 둘 다 추가. (관리: 강유진)"""
 
 from typing import Callable
 
@@ -21,15 +18,15 @@ HANDLERS: dict[str, Callable[[dict], ToolResult]] = {
     "stop_cooking": cooking.stop_cooking,
 }
 
-assert set(HANDLERS) == set(ACTIONS), "schema.ACTIONS 와 HANDLERS 가 맞지 않아요"
+assert set(HANDLERS) == set(ACTIONS), "ACTIONS 와 HANDLERS 불일치"
 
 
 def dispatch(action: Action | None) -> ToolResult:
-    """action 이 없거나 실행 중 오류가 나면 빈 ToolResult (= LLM reply 그대로 말하기)."""
+    """action 없음 → 빈 결과. 실행 오류 → 사과 + confused."""
     if action is None:
         return ToolResult()
     try:
         return HANDLERS[action.name](action.params)
-    except Exception as error:  # 한 기능 오류로 로봇 전체가 멈추지 않게
+    except Exception as error:  # 한 기능 오류로 전체 안 멈추게
         print(f"⚠️ {action.name} 실행 오류: {error}")
         return ToolResult(say="미안, 그건 지금 처리하지 못했어.", emotion="confused")

@@ -1,4 +1,4 @@
-"""환경 변수(.env) 읽기. API 키는 절대 코드에 직접 쓰지 않아요."""
+""".env 읽기. 키는 코드에 직접 쓰지 않기."""
 
 import os
 from pathlib import Path

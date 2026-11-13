@@ -1,33 +1,26 @@
-"""LLM 호출. (담당: 강준형)
+"""LLM 호출. 지금은 mock. (담당: 강준형)"""
 
-지금은 mock 이에요. Gemini 연결은 TODO 부분만 채우면 돼요.
-"""
+import json
 
 from core.prompt import build_system_prompt
 from core.schema import Response, parse_response
 
 
 def ask(user_text: str, context: dict, image: bytes | None = None) -> Response:
-    """사용자 말(+사진) -> Response.
-
-    - image: JPEG bytes. 비전이 필요할 때만 들어와요. (vision/camera.py)
-    - 실패하면 parse_response 가 알아서 FALLBACK("다시 말해줄래?")을 돌려줘요.
-    """
+    """말(+사진 JPEG) → Response. 응답 깨지면 parse_response 가 FALLBACK 반환."""
     _system_prompt = build_system_prompt(context)
 
     # TODO(강준형): google-genai 로 Gemini 호출
     #   - system_instruction=_system_prompt
-    #   - image 가 있으면 types.Part.from_bytes(data=image, mime_type="image/jpeg") 같이 보내기
-    #   - response_mime_type="application/json" 로 JSON 강제
-    #   - 응답 텍스트를 parse_response(raw) 에 넣어서 반환
+    #   - image 있으면 types.Part.from_bytes(data=image, mime_type="image/jpeg")
+    #   - response_mime_type="application/json"
+    #   - 응답 텍스트 → parse_response(raw)
     raw = _mock_llm(user_text, image)
     return parse_response(raw)
 
 
 def _mock_llm(user_text: str, image: bytes | None) -> str:
-    """키워드로 흉내만 내는 가짜 LLM. 다른 모듈 테스트용이에요."""
-    import json
-
+    """키워드로 흉내만 내는 가짜 LLM (다른 모듈 테스트용)."""
     rules = [
         ("냉장고", {"name": "list_ingredients", "params": {}}),
         ("상하는", {"name": "check_expiry", "params": {}}),

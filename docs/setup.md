@@ -69,4 +69,13 @@ uv run pytest
     export SDKROOT=$(xcrun --sdk macosx --show-sdk-path)
     uv sync
     ```
+- **Mac: 시뮬레이터 실행 시 `ModuleNotFoundError: No module named 'gi'`**
+  macOS 가 `.venv` 안의 `.pth` 파일에 숨김 표시를 붙여서 Python 이 GStreamer 경로를 못 읽는 문제예요.
+  숨김 표시를 지우고 바로 실행해요. (숨김 표시가 다시 붙을 수 있어서 실행할 때마다 같이 써요)
+  ```bash
+  chflags nohidden .venv/lib/python3.12/site-packages/*.pth && .venv/bin/mjpython -m reachy_mini.daemon.app.main --sim
+  ```
+- **`websockets.exceptions.InvalidStatus: server rejected WebSocket connection: HTTP 400`**
+  로봇 쪽 카메라·마이크 스트림에 연결하려다 생기는 오류예요. 우리는 PC 장치를 직접 써서
+  `robot/connection.py` 에서 `ReachyMini(media_backend="no_media")` 로 꺼뒀어요.
 - **PowerShell 에서 스크립트 실행 권한 오류** → 관리자 PowerShell 에서 `Set-ExecutionPolicy RemoteSigned` (최초 1회)

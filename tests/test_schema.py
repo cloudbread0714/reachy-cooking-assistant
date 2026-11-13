@@ -37,6 +37,12 @@ def test_unknown_action_is_ignored():
     assert r.reply == "응" and r.action is None
 
 
+def test_non_string_action_name_is_ignored():
+    for bad_name in ([], {}, 3, None):
+        r = parse_response(dump({"reply": "응", "action": {"name": bad_name}}))
+        assert r.reply == "응" and r.action is None
+
+
 def test_missing_required_param_is_ignored():
     r = parse_response(dump({"reply": "응", "emotion": "nod", "action": {"name": "add_ingredient", "params": {}}}))
     assert r.action is None

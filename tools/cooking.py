@@ -1,7 +1,4 @@
-"""요리 안내. (담당: 강준형)
-
-진행 상태는 코드가 기억해요. next/prev/repeat 은 LLM 을 다시 부르지 않아요.
-"""
+"""요리 안내. 상태는 코드가 기억, next/prev/repeat 은 LLM 안 부름. (담당: 강준형)"""
 
 from dataclasses import dataclass, field
 
@@ -20,19 +17,19 @@ state = CookingState()
 
 
 def as_context() -> dict | None:
-    """LLM 프롬프트에 넣을 요리 상태."""
+    """프롬프트에 넣을 요리 상태."""
     if not state.cooking:
         return None
     return {"recipe": state.recipe, "current_step": state.current_step + 1, "total": len(state.steps)}
 
 
 def start_cooking(params: dict) -> ToolResult:
-    # TODO(강준형): data/recipes 에 recipe 가 있으면 그 steps, 없으면 params["steps"] 사용
+    # TODO(강준형): find_recipe(recipe) 있으면 그 steps, 없으면 params["steps"]
     return ToolResult()
 
 
 def next_step(params: dict) -> ToolResult:
-    # TODO(강준형): 요리 중이 아니면 "지금은 요리 중이 아니야"
+    # TODO(강준형): 요리 중 아니면 "지금은 요리 중이 아니야"
     return ToolResult()
 
 

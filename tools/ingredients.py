@@ -1,12 +1,9 @@
 """재료 관리. (담당: 김민석)
 
-저장 형식 (data/ingredients.json):
-    [{"name": "우유", "expiry": "2026-11-20"}, {"name": "두부", "expiry": null}]
-
-규칙 (노션 ④-3):
-- 같은 이름으로 add 하면 새로 추가하지 않고 expiry 만 업데이트
-- expiry 가 None 이면 저장 후 "유통기한은 언제까지야?" 라고 묻기
-- 날짜 계산은 코드가 해요. 임박 기준은 schema.EXPIRY_SOON_DAYS (3일)
+data/ingredients.json: [{"name": "우유", "expiry": "2026-11-20"}, {"name": "두부", "expiry": null}]
+- 같은 이름 add → expiry 만 업데이트
+- expiry None → 저장 후 "유통기한은 언제까지야?"
+- 임박 기준: schema.EXPIRY_SOON_DAYS
 """
 
 import json
@@ -18,6 +15,7 @@ PATH = DATA_DIR / "ingredients.json"
 
 
 def load() -> list[dict]:
+    """파일 깨졌으면 예외 그대로 (빈 목록 반환하면 save 가 덮어씀)."""
     if not PATH.exists():
         return []
     return json.loads(PATH.read_text(encoding="utf-8"))
@@ -39,10 +37,10 @@ def remove_ingredient(params: dict) -> ToolResult:
 
 
 def list_ingredients(params: dict) -> ToolResult:
-    # TODO(김민석): 실제 저장된 재료로 say 만들기 (LLM reply 대신 이걸 말해요)
+    # TODO(김민석): 저장된 재료로 say 만들기
     return ToolResult()
 
 
 def check_expiry(params: dict) -> ToolResult:
-    # TODO(김민석): 지난 재료 -> emotion "shake", 3일 이내 -> "curious"
+    # TODO(김민석): 지남 → "shake", 임박 → "curious"
     return ToolResult()
