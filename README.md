@@ -70,7 +70,7 @@ uv run pytest                         # 테스트
 
 | 구분 | 파일 | 할 일 |
 |---|---|---|
-| 새로 만들기 | `data/recipes/<영문-이름>.json` | 레시피 각자 10~15개 (형식: `data/recipes/kimchi-jjigae.json` 참고) |
+| (완료) | `data/recipes/*.json` | 레시피 44개 채워둠 (한식·양식·중식·일식·분식·디저트). 필요하면 추가만 |
 
 ## 폴더 구조
 
@@ -93,7 +93,7 @@ tools/
   cooking.py         요리 안내 action
 rag/search.py        레시피 검색
 data/
-  recipes/*.json     레시피 데이터 (커밋)
+  recipes/*.json     레시피 44개 (커밋)
   ingredients.json   내 냉장고 재료 (각자 로컬, 커밋 안 함)
 tests/               pytest
 docs/                문서

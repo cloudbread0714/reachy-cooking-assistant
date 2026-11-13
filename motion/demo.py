@@ -12,6 +12,10 @@ from robot.connection import connect
 
 def main() -> None:
     emotions = sys.argv[1:] or list(MOVES)
+    unknown = [e for e in emotions if e not in MOVES]
+    if unknown:
+        sys.exit(f"모르는 감정: {', '.join(unknown)} (가능: {', '.join(MOVES)})")
+
     with connect() as mini:
         player = EmotionPlayer(mini)
         for emotion in emotions:

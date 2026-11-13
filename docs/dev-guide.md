@@ -83,5 +83,5 @@ listen() → needs_vision()? → capture_best_frame() → llm.ask() → dispatch
 
 ## 다 같이: 레시피 데이터
 
-`data/recipes/` 에 레시피 JSON 을 각자 10~15개 추가해요. 형식은 [data-contract.md](data-contract.md#레시피-형식),
-예시는 `data/recipes/kimchi-jjigae.json`. 재료 이름은 냉장고에 등록할 이름과 똑같이 써요 ("대파" O, "파 한 줌" X).
+`data/recipes/` 에 레시피 44개 채워둠 (한식·양식·중식·일식·분식·디저트·샐러드).
+추가할 때는 [data-contract.md](data-contract.md#레시피-형식) 형식대로. `uv run pytest` 가 형식 자동 검사.
