@@ -81,11 +81,11 @@ def main() -> None:
             except Exception as error:  # 한 장 실패로 전체 측정 안 멈추게 (503 등)
                 counts["error"] += 1
                 print(f"[error  ] {label:8} {path.name:20} → {error!r:.80}")
-                continue
-            result = judge(label, response)
-            counts[result] += 1
-            print(f"[{result:7}] {label:8} {path.name:20} → {response.reply}")
-            time.sleep(args.delay)
+            else:
+                result = judge(label, response)
+                counts[result] += 1
+                print(f"[{result:7}] {label:8} {path.name:20} → {response.reply}")
+            time.sleep(args.delay)  # 실패해도 대기 (한도 오류 연달아 안 나게)
 
     total = counts["correct"] + counts["unsure"] + counts["wrong"]  # 오류는 빼고 계산
     if total == 0:
