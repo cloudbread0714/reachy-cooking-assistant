@@ -35,7 +35,7 @@ uv run pytest                         # 테스트
 | 수정 | `voice/stt.py` | `listen()`: 마이크 녹음 → Groq Whisper → 텍스트 |
 | 수정 | `voice/tts.py` | `speak()`: edge-tts 로 말하기 |
 | 수정 | `core/llm.py` | `ask()`: Gemini 호출 (사진 포함, JSON 응답) |
-| 수정 | `core/prompt.py` | 프롬프트 다듬기 |
+| 수정 | `core/prompt.py` | 프롬프트 작성 (사진 규칙은 `vision/rules.py` 의 `VISION_RULES` 넣기) |
 | 수정 | `tools/cooking.py` | `start_cooking`, `next_step`, `prev_step`, `repeat_step`, `stop_cooking` |
 | 새로 만들기 | `voice/recorder.py` | 마이크 녹음, 말 끝나면(무음) 자동 종료 |
 | 새로 만들기 | `tests/test_cooking.py` | 시작 → 다음 → 이전 → 종료 순서 테스트 |
@@ -59,12 +59,13 @@ uv run pytest                         # 테스트
 
 | 구분 | 파일 | 할 일 |
 |---|---|---|
-| 수정 | `vision/camera.py` | `capture_best_frame()`: 가장 선명한 사진, `needs_vision()` 키워드 |
-| 수정 | `core/prompt.py` | 사진 규칙 (애매하면 다시 묻기, 재료명 통일). 준형님과 협의 |
+| 완료 | `vision/camera.py` | 웹캠 → 가장 선명한 사진 → crop·축소 → JPEG, 사진 필요한 말 판단 |
+| 완료 | `vision/names.py` | 재료 이름 통일 ("대파 한 단" → "대파", "달걀" → "계란") |
+| 완료 | `vision/rules.py` | 사진 인식 프롬프트 규칙 (`VISION_RULES`, 준형님 프롬프트에 넣기) |
+| 완료 | `vision/eval.py` | 인식 정확도 측정 |
 | 수정 | `main.py` | 전체 흐름, 시연 시나리오 |
 | 수정 | `core/schema.py`, `tools/dispatcher.py` | 데이터 약속 관리 |
-| 새로 만들기 | `vision/eval.py` | 재료 사진 세트로 인식 정확도 측정 |
-| 새로 만들기 | `tests/test_vision.py` | `needs_vision()` 키워드 테스트 |
+| 완료 | `tests/test_vision.py` | 사진 처리·카메라·이름 통일·main 연결 테스트 |
 
 ### 다 같이
 
@@ -85,7 +86,11 @@ robot/connection.py  Reachy Mini 연결 (main.py 에서 한 번만)
 motion/emotions.py   감정 → 안테나/고개/몸통 동작
 voice/stt.py         마이크 → 텍스트 (지금은 키보드 입력)
 voice/tts.py         텍스트 → 스피커 (지금은 print)
-vision/camera.py     웹캠 → 가장 선명한 사진
+vision/
+  camera.py          웹캠 → 가장 선명한 사진 (JPEG)
+  names.py           재료 이름 통일
+  rules.py           사진 인식 프롬프트 규칙
+  eval.py            인식 정확도 측정
 tools/
   dispatcher.py      action 이름 → 실행 함수 연결
   ingredients.py     재료 관리 action

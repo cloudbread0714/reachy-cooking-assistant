@@ -53,6 +53,7 @@
   - `steps` 가 리스트가 아니거나, 비었거나, 20단계 넘으면 schema 가 `None` 으로 바꿈 → "그 요리 방법을 못 찾았어"
 - 말로 등록하든 카메라로 등록하든 `add_ingredient` 하나만 써요.
 - 같은 이름으로 다시 오면 expiry 만 업데이트해요.
+- `add_ingredient`, `remove_ingredient` 의 `name` 은 dispatcher 가 표준 이름으로 바꿔서 넘겨줘요 (`vision/names.py`: "대파 한 단" → "대파", "달걀" → "계란"). 재료 관리 코드는 받은 이름 그대로 쓰면 돼요.
 - 보류 (2차 회의): 켜자마자 자동 유통기한 알림, `set_alert_days`, 임박 기준 일수
 
 ## 4. 예외 처리

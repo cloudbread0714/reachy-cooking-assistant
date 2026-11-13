@@ -78,4 +78,8 @@ uv run pytest
 - **`websockets.exceptions.InvalidStatus: server rejected WebSocket connection: HTTP 400`**
   로봇 쪽 카메라·마이크 스트림에 연결하려다 생기는 오류예요. 우리는 PC 장치를 직접 써서
   `robot/connection.py` 에서 `ReachyMini(media_backend="no_media")` 로 꺼뒀어요.
+- **카메라를 못 찾음 ("카메라가 안 보여")**
+  - Mac: 시스템 설정 → 개인정보 보호 및 보안 → 카메라 → 사용하는 터미널(또는 VS Code) 허용
+  - 외장 웹캠이면 `.env` 에 `CAMERA_INDEX=1`
+  - 마지막으로 찍힌 사진은 `data/last_capture.jpg` 에서 확인
 - **PowerShell 에서 스크립트 실행 권한 오류** → 관리자 PowerShell 에서 `Set-ExecutionPolicy RemoteSigned` (최초 1회)

@@ -71,12 +71,20 @@ listen() → needs_vision()? → capture_best_frame() → llm.ask() → dispatch
 | `tools/dispatcher.py` | action → 함수 연결 | `dispatch(action) -> ToolResult` |
 | `main.py` | 전체 연결, 시연 흐름 | |
 
+**구현 내용**
+- `vision/camera.py`: 0.5초 동안 여러 장 → Laplacian 선명도 최대 프레임 → 가운데 80% crop → 긴 변 768px → JPEG. 카메라는 시작할 때 미리 켜둠 (첫 촬영 2초 → 0.5초)
+- `needs_vision()`: 지시어(이거/이게/요거…)나 보여주는 표현(손에/들고 있/봐줘/사진)이 있을 때만 촬영. "우유 등록해줘"는 사진 안 찍음
+- 카메라 없으면 LLM 안 부르고 "카메라가 안 보여" (사진 없이 물으면 지어내니까)
+- `vision/names.py`: add/remove_ingredient 의 name 을 dispatcher 에서 레시피 데이터 이름으로 통일
+- `vision/rules.py`: 사진 인식 프롬프트 규칙. 준형님이 `core/prompt.py` 에 넣기
+
 **혼자 테스트하기**
-- `uv run python -c "from vision.camera import capture_best_frame; open('shot.jpg','wb').write(capture_best_frame())"` 로 사진 확인
-- 인식 정확도: 재료 사진 20~30장으로 테스트 세트를 만들어 프롬프트 바꿀 때마다 비교
+- 마지막 촬영 사진: `data/last_capture.jpg` (커밋 안 됨)
+- 인식 정확도: `data/vision_samples/<재료명>/*.jpg` 넣고 `uv run python -m vision.eval --limit 5` (준형님 `llm.ask()` 구현 후)
 
 **주의**
 - 사진 인식은 LLM 한 번 호출 안에서 같이 해요 (별도 비전 모델 호출 없음 → 무료 한도 절약)
+- 레시피에 재료 추가할 때 별칭("참치", "달걀") 말고 표준 이름("참치캔", "계란") 쓰기. 테스트가 검사함
 - "이거 등록해줘"도 action 은 `add_ingredient` 하나예요. 저장 처리는 민석님 코드가 해요.
 
 ---
