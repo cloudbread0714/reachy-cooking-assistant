@@ -16,3 +16,5 @@ data/settings.json
 .vscode/
 .idea/
 data/generated_recipes/
+data/last_capture.jpg
+data/vision_samples/
