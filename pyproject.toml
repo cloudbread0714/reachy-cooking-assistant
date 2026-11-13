@@ -1,0 +1,25 @@
+[project]
+name = "reachy-cooking-assistant"
+version = "0.1.0"
+description = "Reachy Mini 요리 도우미 로봇"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "reachy-mini[mujoco]",
+    "google-genai",
+    "groq",
+    "edge-tts",
+    "opencv-python",
+    "sounddevice",
+    "numpy",
+    "python-dotenv",
+]
+
+[dependency-groups]
+dev = ["pytest"]
+
+[tool.uv]
+package = false
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
