@@ -51,7 +51,7 @@ def test_preprocess_crops_center_and_limits_size():
     assert abs(out.shape[1] / out.shape[0] - 1920 / 1080) < 0.01  # 비율 유지
 
     small = np.zeros((200, 300, 3), np.uint8)
-    assert preprocess(small).shape[:2] == (160, 240)  # 작으면 crop 만, 확대 안 함
+    assert preprocess(small).shape[:2] == (200, 300)  # 작으면 그대로, 확대 안 함
 
 
 def test_encode_jpeg_is_valid():

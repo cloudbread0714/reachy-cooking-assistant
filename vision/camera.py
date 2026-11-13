@@ -1,6 +1,6 @@
 """웹캠 → LLM 에 보낼 사진. 인식은 LLM 이 하고, 여기선 언제 찍을지 + 사진 품질. (담당: 강유진)
 
-흐름: 여러 장 찍기 → 가장 선명한 한 장 → 가운데 crop + 축소 → JPEG
+흐름: 여러 장 찍기 → 가장 선명한 한 장 → 축소 → JPEG
 """
 
 from __future__ import annotations
@@ -20,7 +20,7 @@ CAMERA_INDEX = int(os.getenv("CAMERA_INDEX", "0"))
 CAPTURE_SIZE = (1280, 720)  # 요청 해상도
 WARMUP_SEC = 0.3      # 켜자마자 나오는 어두운 프레임 버림
 BURST_SEC = 0.5       # 이 시간 동안 찍은 것 중 가장 선명한 것 선택
-CROP_RATIO = 0.8      # 가운데 80% 만 (손에 든 물건이 보통 가운데)
+CROP_RATIO = 1.0      # 자르기 안 함. 0.8 이면 가장자리 라벨이 잘려서 인식 실패함 (실험 결과)
 MAX_SIDE = 768        # 긴 변 최대 크기 (토큰·속도 절약)
 JPEG_QUALITY = 85
 MIN_SHARPNESS = 15.0  # 이보다 흐리면 "흐림" 판정
@@ -51,7 +51,7 @@ def select_sharpest(frames: list[np.ndarray]) -> np.ndarray | None:
 
 
 def preprocess(frame: np.ndarray) -> np.ndarray:
-    """가운데 crop + 긴 변 MAX_SIDE 로 축소."""
+    """(CROP_RATIO < 1 이면 가운데 crop) + 긴 변 MAX_SIDE 로 축소."""
     h, w = frame.shape[:2]
     ch, cw = int(h * CROP_RATIO), int(w * CROP_RATIO)
     top, left = (h - ch) // 2, (w - cw) // 2

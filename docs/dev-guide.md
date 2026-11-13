@@ -72,7 +72,7 @@ listen() → needs_vision()? → capture_best_frame() → llm.ask() → dispatch
 | `main.py` | 전체 연결, 시연 흐름 | |
 
 **구현 내용**
-- `vision/camera.py`: 0.5초 동안 여러 장 → Laplacian 선명도 최대 프레임 → 가운데 80% crop → 긴 변 768px → JPEG. 카메라는 시작할 때 미리 켜둠 (첫 촬영 2초 → 0.5초)
+- `vision/camera.py`: 0.5초 동안 여러 장 → Laplacian 선명도 최대 프레임 → 긴 변 768px 로 축소 (가운데 crop 은 라벨 잘려서 끔) → JPEG. 카메라는 시작할 때 미리 켜둠 (첫 촬영 2초 → 0.5초)
 - `needs_vision()`: 지시어(이거/이게/요거…)나 보여주는 표현(손에/들고 있/봐줘/사진)이 있을 때만 촬영. "우유 등록해줘"는 사진 안 찍음
 - 카메라 없으면 LLM 안 부르고 "카메라가 안 보여" (사진 없이 물으면 지어내니까)
 - `vision/names.py`: add/remove_ingredient 의 name 을 dispatcher 에서 레시피 데이터 이름으로 통일

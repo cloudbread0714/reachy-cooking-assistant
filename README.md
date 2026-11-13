@@ -59,7 +59,7 @@ uv run pytest                         # 테스트
 
 | 구분 | 파일 | 할 일 |
 |---|---|---|
-| 완료 | `vision/camera.py` | 웹캠 → 가장 선명한 사진 → crop·축소 → JPEG, 사진 필요한 말 판단 |
+| 완료 | `vision/camera.py` | 웹캠 → 가장 선명한 사진 → 축소 → JPEG, 사진 필요한 말 판단 |
 | 완료 | `vision/names.py` | 재료 이름 통일 ("대파 한 단" → "대파", "달걀" → "계란") |
 | 완료 | `vision/rules.py` | 사진 인식 프롬프트 규칙 (`VISION_RULES`, 준형님 프롬프트에 넣기) |
 | 완료 | `vision/eval.py` | 인식 정확도 측정 |
