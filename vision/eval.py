@@ -11,6 +11,7 @@
 from __future__ import annotations
 
 import argparse
+import re
 import time
 import unicodedata
 from datetime import date
@@ -21,7 +22,7 @@ import numpy as np
 from core import llm
 from core.config import DATA_DIR
 from vision.camera import encode_jpeg, preprocess
-from vision.names import ALIASES, normalize_ingredient
+from vision.names import ALIASES, known_names, normalize_ingredient
 
 SAMPLE_DIR = DATA_DIR / "vision_samples"
 QUESTION = "이거 뭐야?"
@@ -32,13 +33,26 @@ def load_image(path) -> bytes | None:
     return None if frame is None else encode_jpeg(preprocess(frame))
 
 
+def mentioned(reply: str) -> set[str]:
+    """대답에 나온 재료 이름 (표준 이름). 단어 단위라 "양배추야" 에서 "배" 는 안 나옴.
+
+    "달걀이야" → 앞부분 "달걀" → 계란. 조사 목록 대신 단어 앞부분(2글자+)을 전부 정규화해서 봄
+    """
+    found = set()
+    for word in re.findall(r"[가-힣]+", reply):
+        for end in range(2, len(word) + 1):
+            name = normalize_ingredient(word[:end])
+            if name in known_names() or name in ALIASES.values():
+                found.add(name)
+    return found
+
+
 def judge(label: str, response) -> str:
     """'correct' / 'unsure' / 'wrong'"""
     if response.action and response.action.name == "add_ingredient":
         if normalize_ingredient(str(response.action.params.get("name", ""))) == label:
             return "correct"
-    names = {label, *(a for a, std in ALIASES.items() if std == label and len(a) >= 2)}  # "달걀" 도 계란 정답 ("파" 는 "양파" 에 걸려서 제외)
-    if any(name in response.reply for name in names):
+    if label in mentioned(response.reply):
         return "correct"
     return "unsure" if response.emotion == "confused" else "wrong"
 

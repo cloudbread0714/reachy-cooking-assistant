@@ -80,12 +80,12 @@ class FakeCapture:
 
 def test_camera_picks_sharpest(monkeypatch):
     monkeypatch.setattr(camera, "WARMUP_SEC", 0)
-    monkeypatch.setattr(camera, "BURST_SEC", 0)
+    monkeypatch.setattr(camera, "BURST_SEC", 1)  # 프레임 다 떨어질 때까지 읽음
     sharp = checkerboard()
     blurry = cv2.GaussianBlur(sharp, (31, 31), 10)
-    fake = FakeCapture([blurry, blurry, sharp, blurry])
+    fake = FakeCapture([blurry, blurry, sharp, blurry])  # 첫 장은 웜업에서 버림
     cam = Camera(opener=lambda index: fake)
-    assert cam.capture() is not None
+    assert cam.capture() is sharp
     cam.release()
     assert fake.released
 
@@ -157,3 +157,41 @@ def test_eval_judge():
     assert judge("대파", Response(reply="이건 양파야!")) == "wrong"
     assert judge("대파", Response(reply="잘 안 보여", emotion="confused")) == "unsure"
     assert judge("대파", Response(reply="등록할게", action=Action("add_ingredient", {"name": "대파 한 단"}))) == "correct"
+
+
+def test_camera_reopens_after_read_failure(monkeypatch):
+    """읽기 실패하면 버리고 다음 촬영 때 다시 열기."""
+    monkeypatch.setattr(camera, "WARMUP_SEC", 0)
+    opened = []
+
+    def opener(index):
+        fake = FakeCapture([checkerboard()] * (0 if not opened else 3))
+        opened.append(fake)
+        return fake
+
+    cam = Camera(opener=opener)
+    assert cam.capture() is None  # 첫 카메라는 열렸는데 프레임 없음
+    assert cam.capture() is not None  # 다시 열어서 성공
+    assert len(opened) == 2
+
+
+@pytest.mark.parametrize("text", ["타이거새우 등록해줘", "요거트 등록해줘"])
+def test_needs_vision_ignores_inside_words(text):
+    assert not needs_vision(text)
+
+
+def test_name_inside_word_not_treated_as_amount():
+    assert normalize_ingredient("두반장") == "두반장"
+    assert normalize_ingredient("두반장 한 병") == "두반장"
+
+
+@pytest.mark.parametrize("label, reply, expected", [
+    ("배", "이건 양배추야!", "wrong"),       # 부분 문자열은 정답 아님
+    ("버섯", "표고버섯이야!", "correct"),
+    ("오이", "싱싱한 오이네!", "correct"),
+    ("대파", "이건 양파야!", "wrong"),
+])
+def test_eval_judge_word_level(label, reply, expected):
+    from vision.eval import judge
+
+    assert judge(label, Response(reply=reply)) == expected

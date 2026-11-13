@@ -28,7 +28,7 @@ LAST_CAPTURE = DATA_DIR / "last_capture.jpg"  # 디버그용, 커밋 안 함
 
 # 지시어나 "보여주는" 표현이 있을 때만 사진. "우유 등록해줘" 같은 말로만 하는 등록은 사진 없음
 _VISION_PATTERN = re.compile(
-    r"(이거|이게|이건|이것|요거|요게|요건|저거|저게|저건)"
+    r"(?<![가-힣])(이거|이게|이건|이것|요거(?!트)|요게|요건|저거|저게|저건)"  # 단어 앞만 ("타이거새우", "요거트" 제외)
     r"|(들고 ?있|손에|보여 ?줄게|보이(니|지|냐|나)|봐 ?봐|봐 ?줘|사진)"
 )
 
@@ -105,7 +105,10 @@ class Camera:
         """BURST_SEC 동안 찍은 것 중 가장 선명한 프레임. 카메라 없으면 None."""
         if not self._ensure_open():
             return None
-        return select_sharpest(self._read_for(BURST_SEC))
+        frames = self._read_for(BURST_SEC)
+        if not frames:  # 연결 끊김 → 다음 촬영 때 다시 열기
+            self.release()
+        return select_sharpest(frames)
 
     def release(self) -> None:
         if self._cap is not None:
