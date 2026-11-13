@@ -1,0 +1,8 @@
+#!/bin/sh
+# main 브랜치에 직접 커밋하는 것을 막아요. 기능 브랜치에서 작업한 뒤 PR로 merge하세요.
+branch="$(git symbolic-ref --short HEAD 2>/dev/null)"
+if [ "$branch" = "main" ]; then
+  echo "❌ main 브랜치에는 직접 커밋할 수 없어요."
+  echo "   git switch -c feat/<기능명>  으로 브랜치를 만든 뒤 커밋하고 PR을 올려주세요."
+  exit 1
+fi
