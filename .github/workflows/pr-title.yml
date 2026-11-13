@@ -1,0 +1,23 @@
+# Squash merge 하면 PR 제목이 main 의 커밋 메시지가 돼요. 그래서 PR 제목도 커밋 규칙을 검사해요.
+name: PR 제목 검사
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: PR 제목이 "종류(폴더): 내용" 형식인지 확인
+        env:
+          TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          pattern='^(feat|fix|refactor|test|docs|chore)(\((core|voice|motion|vision|tools|rag|robot|data|docs|tests)\))?: .+'
+          if printf '%s' "$TITLE" | grep -Eq "$pattern"; then
+            echo "✅ $TITLE"
+          else
+            echo "❌ PR 제목 형식이 맞지 않아요: $TITLE"
+            echo "예시: feat(voice): Groq Whisper STT 연결"
+            exit 1
+          fi

@@ -1,0 +1,19 @@
+#!/bin/sh
+# 커밋 메시지 형식 검사: 종류(폴더): 내용   (규칙: CONTRIBUTING.md)
+first_line="$(head -n 1 "$1")"
+pattern='^(feat|fix|refactor|test|docs|chore)(\((core|voice|motion|vision|tools|rag|robot|data|docs|tests)\))?: .+'
+
+case "$first_line" in
+  Merge*|Revert*|fixup!*|squash!*) exit 0 ;;
+esac
+
+if ! printf '%s' "$first_line" | grep -Eq "$pattern"; then
+  echo "❌ 커밋 메시지 형식이 맞지 않아요: $first_line"
+  echo ""
+  echo "   형식: 종류(폴더): 내용"
+  echo "   예시: feat(voice): Groq Whisper STT 연결"
+  echo "         fix(motion): 모르는 emotion은 nod로 처리"
+  echo "   종류: feat fix refactor test docs chore"
+  echo "   폴더: core voice motion vision tools rag robot data docs tests (생략 가능)"
+  exit 1
+fi
